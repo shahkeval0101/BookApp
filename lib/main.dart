@@ -1,6 +1,9 @@
 import 'package:Book_club/screens/login/login.dart';
+import 'package:Book_club/states/currentUser.dart';
 import 'package:Book_club/utils/OurTheme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,10 +57,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: OurTheme().buildTheme(),
-      home: OurLogin(),
+    return ChangeNotifierProvider(
+      create: (context) => CurrentUser(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: OurTheme().buildTheme(),
+        home: OurLogin(),
+      ),
     );
   }
 }
