@@ -18,20 +18,16 @@ class _OurSignUpFormState extends State<OurSignUpForm> {
       String email, String password, BuildContext context, String text) async {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     try {
-      // String _returnString = await Auth().signUpUser(email, password, fullName);
-      // if (_returnString == "success") {
-      //   Navigator.pop(context);
-      // } else {
-      //   Scaffold.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(_returnString),
-      //       duration: Duration(seconds: 2),
-      //     ),
-      //   );
-      // }
-
-      if (await _currentUser.signUpUSer(email, password)) {
+      String _returnString = await _currentUser.signUpUser(email, password);
+      if (_returnString == "success") {
         Navigator.pop(context);
+      } else {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_returnString),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
       print(e);
