@@ -40,8 +40,10 @@ class _OurLoginFormState extends State<OurLoginForm> {
         default:
       }
       if (_returnString == "success") {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false);
       } else {
         Scaffold.of(context).showSnackBar(
           SnackBar(

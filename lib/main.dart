@@ -1,4 +1,5 @@
 import 'package:Book_club/screens/login/login.dart';
+import 'package:Book_club/screens/root/root.dart';
 import 'package:Book_club/states/currentUser.dart';
 import 'package:Book_club/utils/OurTheme.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: OurTheme().buildTheme(),
-        home: OurLogin(),
+        home: OurRoot(),
       ),
     );
   }
