@@ -1,5 +1,6 @@
 import 'package:Book_club/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class OurDatabase {
   final Firestore _firestore = Firestore.instance;
@@ -21,78 +22,82 @@ class OurDatabase {
     return retVal;
   }
 
-// Future<String> createGroup(
-//       String groupName, UserModel user, BookModel initialBook) async {
-//     String retVal = "error";
-//     List<String> members = List();
-//     List<String> tokens = List();
+  Future<String> createGroup(String groupName, String userUid) async {
+    String retVal = "error";
+    List<String> members = List();
+    List<String> tokens = List();
+    try {
+      members.add(userUid);
+      // tokens.add(user.notifToken);
+      // DocumentReference _docRef;
+      // if (user.notifToken != null) {
+      //   _docRef = await _firestore.collection("groups").add({
+      //     'name': groupName.trim(),
+      //     'leader': userUid,
+      //     'members': members,
+      //     'tokens': tokens,
+      //     'groupCreated': Timestamp.now(),
+      //     'nextBookId': "waiting",
+      //     'indexPickingBook': 0
+      //   });
+      // } else {
+      //   _docRef = await _firestore.collection("groups").add({
+      //     'name': groupName.trim(),
+      //     'leader': userUid,
+      //     'members': members,
+      //     'groupCreated': Timestamp.now(),
+      //     'nextBookId': "waiting",
+      //     'indexPickingBook': 0
+      //   });
+      // }
+      DocumentReference _docRef = await _firestore.collection("groups").add({
+        'name': groupName.trim(),
+        'leader': userUid,
+        'members': members,
+        'groupCreated': Timestamp.now(),
+      });
 
-//     try {
-//       members.add(user.uid);
-//       tokens.add(user.notifToken);
-//       DocumentReference _docRef;
-//       if (user.notifToken != null) {
-//         _docRef = await _firestore.collection("groups").add({
-//           'name': groupName.trim(),
-//           'leader': user.uid,
-//           'members': members,
-//           'tokens': tokens,
-//           'groupCreated': Timestamp.now(),
-//           'nextBookId': "waiting",
-//           'indexPickingBook': 0
-//         });
-//       } else {
-//         _docRef = await _firestore.collection("groups").add({
-//           'name': groupName.trim(),
-//           'leader': user.uid,
-//           'members': members,
-//           'groupCreated': Timestamp.now(),
-//           'nextBookId': "waiting",
-//           'indexPickingBook': 0
-//         });
-//       }
+      await _firestore.collection("users").document(userUid).updateData({
+        'groupId': _docRef.documentID,
+      });
 
-//       await _firestore.collection("users").document(user.uid).updateData({
-//         'groupId': _docRef.documentID,
-//       });
+      //add a book
+      // addBook(_docRef.documentID, initialBook);
 
-//       //add a book
-//       addBook(_docRef.documentID, initialBook);
+      retVal = "success";
+    } catch (e) {
+      print(e);
+    }
 
-//       retVal = "success";
-//     } catch (e) {
-//       print(e);
-//     }
+    return retVal;
+  }
 
-//     return retVal;
-//   }
-
-//   Future<String> joinGroup(String groupId, UserModel userModel) async {
-//     String retVal = "error";
-//     List<String> members = List();
-//     List<String> tokens = List();
-//     try {
-//       members.add(userModel.uid);
+  Future<String> joinGroup(String groupId, String userUid) async {
+    String retVal = "error";
+    List<String> members = List();
+    List<String> tokens = List();
+    try {
+      members.add(userUid);
 //       tokens.add(userModel.notifToken);
-//       await _firestore.collection("groups").document(groupId).updateData({
-//         'members': FieldValue.arrayUnion(members),
-//         'tokens': FieldValue.arrayUnion(tokens),
-//       });
+      await _firestore.collection("groups").document(groupId).updateData({
+        'members': FieldValue.arrayUnion(members),
+        'tokens': FieldValue.arrayUnion(tokens),
+      });
 
-//       await _firestore.collection("users").document(userModel.uid).updateData({
-//         'groupId': groupId.trim(),
-//       });
+      await _firestore.collection("users").document(groupId).updateData({
+        'groupId': groupId.trim(),
+      });
 
-//       retVal = "success";
-//     } on PlatformException catch (e) {
-//       retVal = "Make sure you have the right group ID!";
-//       print(e);
-//     } catch (e) {
-//       print(e);
-//     }
+      retVal = "success";
+    } on PlatformException catch (e) {
+      retVal = "Make sure you have the right group ID!";
+      print(e);
+    } catch (e) {
+      print(e);
+    }
 
-//     return retVal;
-//   }
+    return retVal;
+  }
 
 //   Future<String> leaveGroup(String groupId, UserModel userModel) async {
 //     String retVal = "error";
@@ -309,6 +314,8 @@ class OurDatabase {
       retVal.fullName = _docSnapshot.data['fullName'];
       retVal.email = _docSnapshot.data['email'];
       retVal.accountCreated = _docSnapshot.data['accountCreated'];
+      retVal.email = _docSnapshot.data['email'];
+      retVal.groupId = _docSnapshot.data['groupId'];
       // retVal = OurUser.fromDocumentSnapshot(doc: _docSnapshot);
     } catch (e) {
       print(e);

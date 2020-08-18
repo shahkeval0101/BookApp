@@ -1,3 +1,5 @@
+import 'package:Book_club/screens/createGroup/createGroup.dart';
+import 'package:Book_club/screens/joinGroup/joinGroup.dart';
 import 'package:flutter/material.dart';
 
 class OurNoGroup extends StatelessWidget {
@@ -5,23 +7,22 @@ class OurNoGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     // UserModel _currentUser = Provider.of<UserModel>(context);
     void _goToJoin(BuildContext context) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => JoinGroup(
-      //       userModel: _currentUser,
-      //     ),
-      //   ),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OurJoinGroup(),
+          // userModel: _currentUser,
+        ),
+      );
     }
 
     void _goToCreate(BuildContext context) {
-      // Navigator.push(
-      // //   context,
-      // //   MaterialPageRoute(
-      // //     builder: (context) => CreateGroup(),
-      // //   ),
-      // // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OurCreateGroup(),
+        ),
+      );
     }
 
     // void _signOut(BuildContext context) async {

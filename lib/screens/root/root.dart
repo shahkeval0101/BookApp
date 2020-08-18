@@ -1,10 +1,17 @@
 import 'package:Book_club/screens/home.dart';
 import 'package:Book_club/screens/login/login.dart';
+import 'package:Book_club/screens/noGroup/noGroup.dart';
+import 'package:Book_club/screens/splashScreen/splashScreen.dart';
 import 'package:Book_club/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum AuthStatus { unknown, notLoggedIn, loggedIn }
+enum AuthStatus {
+  unknown,
+  notLoggedIn,
+  notInGroup,
+  inGroup,
+}
 
 class OurRoot extends StatefulWidget {
   @override
@@ -50,10 +57,20 @@ class _OurRootState extends State<OurRoot> {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     String _returnString = await _currentUser.onStartUp();
     if (_returnString == "success") {
-      setState(() {
-        _authStatus = AuthStatus.loggedIn;
-        // currentUid = _authStream.uid;
-      });
+      if (_currentUser.getCurrentUser.groupId != null) {
+        setState(
+          () {
+            _authStatus = AuthStatus.inGroup;
+          },
+        );
+      } else {
+        setState(
+          () {
+            _authStatus = AuthStatus.notInGroup;
+            // currentUid = _authStream.uid;
+          },
+        );
+      }
     } else {
       setState(() {
         _authStatus = AuthStatus.notLoggedIn;
@@ -67,12 +84,18 @@ class _OurRootState extends State<OurRoot> {
 
     switch (_authStatus) {
       case AuthStatus.unknown:
-      // retVal = SplashScreen();
-      // break;
+        retVal = OurSplashScreen();
+        break;
       case AuthStatus.notLoggedIn:
         retVal = OurLogin();
         break;
-      case AuthStatus.loggedIn:
+
+      case AuthStatus.notInGroup:
+        retVal = OurNoGroup();
+        break;
+
+      case AuthStatus.inGroup:
+
         // retVal = StreamProvider<UserModel>.value(
         //   value: DBStream().getCurrentUser(currentUid),
         //   child: LoggedIn(),
